@@ -1,0 +1,21 @@
+-- This project was made using Bolt
+-- Following is the initial prompt
+
+```
+Hi, so I need to build a frontend for my project, which is a chatbot designed for students of the DataTalksClub to converse with it and get ideas for the capstone project for any of the DataTalksClub courses.
+The AI Agent, RAG system and the backend are being developed by my fellows so I just need to work on the frontend of the app. I will integrate the backend in the frontend when it is completed by my fellows. So just focus on building the frontend.
+It needs the following features.
+
+
+2 pages are needed in the frontend. The first is the chat page. This is where the chat will be done. It will have a chatbox where the previous conversations of the chatbot and the user can be seen and scrolled and it will also have the input box where user can enter their messages for the AI to respond to.
+
+
+The second page is the chat history where all of the previous chats done by the user will be listed and they can select any of these to resume talking with the AI bot in that particular chat.
+
+
+The design should be simple but attractive. Pleasing to the eye such that the students can use it with ease and not be bored when using it giving them a good user experience.
+
+
+Notes:
+I know authentication is required for such apps but since the backend isn't done yet so we'll see afterwards how to add and use authentication in the proper manner. You can just make the pages and allow login without any credentials check. Do add comments to notify that this will be made after the backend is completed.
+```
