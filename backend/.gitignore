@@ -1,0 +1,14 @@
+# Python Virtual Environments
+.venv
+*-venv
+
+
+# Python Cache
+**/__pycache__
+
+# VSCode
+.vscode
+
+
+# Testing database
+db.sqlite3
