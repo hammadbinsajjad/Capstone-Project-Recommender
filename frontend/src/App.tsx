@@ -8,7 +8,6 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import { isLoggedIn } from './utils/helpers';
 import { SyncLoader } from 'react-spinners';
-import { chatMessages } from './utils/api';
 
 
 interface PrivateRouteProps {

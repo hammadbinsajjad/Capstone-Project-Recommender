@@ -137,7 +137,24 @@ const chatMessages = async (chatId: number) : Promise<Message[]> => {
 };
 
 
-const sendMessage = async (chatId: number, query: string) => {
+const createChat = async (query: string) => {
+    const response = await fetch(API_ENDPOINTS.CHATS, {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify({
+            user_query: query,
+        }),
+    });
+
+    if (!response.ok) {
+        throw new Error("Unable to create new chat");
+    }
+
+    return await response.json();
+};
+
+
+const continueChat = async (chatId: number, query: string) => {
     const response = await fetch(`${API_ENDPOINTS.CHATS}${chatId}/`, {
         method: "PUT",
         headers: authHeaders(),
@@ -159,5 +176,5 @@ const sendMessage = async (chatId: number, query: string) => {
 export {
     registerUser, loginUser, loggedInUser,
     chatHistory, verifyToken, refreshToken,
-    chatMessages, sendMessage,
+    chatMessages, continueChat, createChat,
 };

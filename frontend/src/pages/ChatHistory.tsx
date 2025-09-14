@@ -17,25 +17,36 @@ interface Chat {
 
 export default function ChatHistory() {
   const [chats, setChats] = useState<Chat[]>([]);
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
+  const [isLogged, setIsLogged] = useState(false);
   const navigate = useNavigate();
 
-  if (!isLoggedIn()) {
-    navigate('/login');
-  }
-
   useEffect(() => {
-    const fetchChatHistory = async () => {
-      try {
-        const chats = await chatHistory();
-        setChats(chats);
-      } catch (error) {
-        console.error("Error fetching chat history:", error);
-        setChats([]);
+    const checkAuth = async () => {
+      const loggedIn = await isLoggedIn();
+      setIsLogged(loggedIn);
+      setIsAuthChecked(true);
+      if (!loggedIn) {
+        navigate('/login');
       }
     };
+    checkAuth();
+  }, [navigate]);
 
-    fetchChatHistory();
-  }, []);
+  useEffect(() => {
+    if (isAuthChecked && isLogged) {
+      const fetchChatHistory = async () => {
+        try {
+          const chats = await chatHistory();
+          setChats(chats);
+        } catch (error) {
+          console.error("Error fetching chat history:", error);
+          setChats([]);
+        }
+      };
+      fetchChatHistory();
+    }
+  }, [isAuthChecked, isLogged]);
 
   return (
     <Layout>

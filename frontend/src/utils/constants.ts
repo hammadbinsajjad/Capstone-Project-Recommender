@@ -15,4 +15,15 @@ const API_ENDPOINTS = {
     CHATS: `${BASE_CHATS_URL}`,
 };
 
-export { API_ENDPOINTS };
+
+const STARTING_AI_MESSAGE = (
+    "Hello! I'm your DataTalksClub capstone project assistant. " +
+    "I'm here to help you brainstorm and develop ideas for your " +
+    "capstone project across any of our courses - ML Engineering, " +
+    "Data Engineering, MLOps, LLMs, and more!\n\nWhich " +
+    "course are you taking, and what kind of project are you thinking about?"
+)
+
+export {
+    API_ENDPOINTS, STARTING_AI_MESSAGE
+};

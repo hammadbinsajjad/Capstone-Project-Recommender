@@ -1,19 +1,23 @@
 import { useState, useRef, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { SyncLoader } from 'react-spinners';
 
 import ChatInput from '../components/ChatInput';
 import ChatMessage from '../components/ChatMessage';
 import Layout from '../components/Layout';
 import { Message } from '../types';
-import { chatMessages, sendMessage } from '../utils/api';
+import { chatMessages, continueChat, createChat } from '../utils/api';
+import { STARTING_AI_MESSAGE } from '../utils/constants';
 
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const chatId = Number(useParams<{ chatId: string }>().chatId);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { chatId } = useParams<{ chatId: string }>();
+  const isNewChat = !chatId;
 
 
   const scrollToBottom = () => {
@@ -23,18 +27,29 @@ export default function Chat() {
   useEffect(() => {
     const fetchChatMessages = async () => {
       try {
-        const messages = await chatMessages(chatId);
-        setMessages(messages);
+        let loadedMessages = [];
+
+        if (isNewChat) {
+            loadedMessages = [{ id: 0, content: STARTING_AI_MESSAGE, isUser: false }];
+        } else {
+          if (location.state?.initialMessages) {
+            loadedMessages = location.state.initialMessages;
+            console.log("Loaded initial messages from navigation state:", loadedMessages);
+          } else {
+            loadedMessages = await chatMessages(Number(chatId));
+            console.log("Fetched messages from API:", loadedMessages);
+          }
+        }
+        setMessages(loadedMessages);
       } catch (error) {
         console.error("Error fetching chat messages:", error);
         setMessages([]);
-      } finally {
-        setIsPageLoading(false);
       }
-    };
 
+      setIsPageLoading(false);
+    };
     fetchChatMessages();
-  }, [chatId]);
+  }, [chatId, isNewChat, location.state]);
 
   const handleSendMessage = async (query: string) => {
     const userMessage: Message = {
@@ -45,20 +60,38 @@ export default function Chat() {
 
     setMessages(prev => [...prev, userMessage]);
 
-    setIsLoading(true);
-    const response = await sendMessage(chatId, query);
+    if (isNewChat) {
+      setIsLoading(true);
+      try {
+        const response = await createChat(query);
+        const newChatId = response.chat.id;
+        const aiResponse = response.ai_response;
 
-    if (response) {
-      const ai_message: Message = {
-        id: messages.length,
-        content: response,
-        isUser: false,
-      };
+        const initialMessages: Message[] = [
+          { id: 0, content: STARTING_AI_MESSAGE, isUser: false },
+          { id: 1, content: query, isUser: true },
+          { id: 2, content: aiResponse, isUser: false },
+        ];
 
-      setMessages(previousMessages => [...previousMessages, ai_message]);
+        navigate(`/chat/${newChatId}`, { state: { initialMessages } });
+      } catch (error) {
+        console.error("Error creating new chat:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      setIsLoading(true);
+      const response = await continueChat(Number(chatId), query);
+      if (response) {
+        const ai_message: Message = {
+          id: messages.length,
+          content: response,
+          isUser: false,
+        };
+        setMessages(previousMessages => [...previousMessages, ai_message]);
+      }
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   useEffect(() => {
