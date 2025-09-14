@@ -1,0 +1,7 @@
+import os
+
+GEMINI_MODEL = "gemma-3-12b-it"
+
+QUERY_PREVIEW_LENGTH = 512
+
+POSTGRES_CHAT_STORE_URI = os.environ.get("POSTGRES_CHAT_STORE_URI") or ""
