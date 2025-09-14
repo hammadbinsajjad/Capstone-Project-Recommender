@@ -60,4 +60,4 @@ class ChatsViewSet(ModelViewSet):
         return Response({"chat": response.data, "ai_response": ai_answer})
 
     def perform_update(self, serializer):
-        return serializer.save(message_count=self.get_object().message_count + 1)
+        return serializer.save(message_count=self.get_object().message_count + 2)

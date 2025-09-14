@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { MessageSquare, History, LogOut, GraduationCap } from 'lucide-react';
 
 interface LayoutProps {
@@ -8,11 +9,12 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const location = useLocation();
+  const navigate = useNavigate();
 
-  // TODO: Replace with proper authentication when backend is ready
   const handleLogout = () => {
+    localStorage.removeItem('tokens');
     localStorage.removeItem('user');
-    window.location.href = '/login';
+    navigate('/login');
   };
 
   return (
@@ -28,7 +30,7 @@ export default function Layout({ children }: LayoutProps) {
                 </span>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-4">
               <Link
                 to="/chat"
@@ -41,7 +43,7 @@ export default function Layout({ children }: LayoutProps) {
                 <MessageSquare className="h-4 w-4" />
                 <span>Chat</span>
               </Link>
-              
+
               <Link
                 to="/history"
                 className={`px-4 py-2 rounded-lg flex items-center space-x-2 transition-all duration-200 ${
@@ -53,7 +55,7 @@ export default function Layout({ children }: LayoutProps) {
                 <History className="h-4 w-4" />
                 <span>History</span>
               </Link>
-              
+
               <button
                 onClick={handleLogout}
                 className="px-4 py-2 rounded-lg flex items-center space-x-2 text-gray-600 hover:text-red-600 hover:bg-red-50 transition-all duration-200"
@@ -65,7 +67,7 @@ export default function Layout({ children }: LayoutProps) {
           </div>
         </div>
       </nav>
-      
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {children}
       </main>

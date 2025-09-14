@@ -1,8 +1,7 @@
 export interface Message {
-  id: string;
+  id: number;
   content: string;
   isUser: boolean;
-  timestamp: Date;
 }
 
 export interface Chat {

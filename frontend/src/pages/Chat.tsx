@@ -1,64 +1,78 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import Layout from '../components/Layout';
-import ChatMessage from '../components/ChatMessage';
+import { useState, useRef, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { SyncLoader } from 'react-spinners';
+
 import ChatInput from '../components/ChatInput';
+import ChatMessage from '../components/ChatMessage';
+import Layout from '../components/Layout';
 import { Message } from '../types';
-import { getCurrentChat } from '../utils/mockData';
+import { chatMessages, sendMessage } from '../utils/api';
 
 export default function Chat() {
-  const [messages, setMessages] = useState<Message[]>(getCurrentChat().messages);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPageLoading, setIsPageLoading] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatId = Number(useParams<{ chatId: string }>().chatId);
+
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    const fetchChatMessages = async () => {
+      try {
+        const messages = await chatMessages(chatId);
+        setMessages(messages);
+      } catch (error) {
+        console.error("Error fetching chat messages:", error);
+        setMessages([]);
+      } finally {
+        setIsPageLoading(false);
+      }
+    };
 
-  // TODO: Replace with actual API call when backend is ready
-  const simulateAIResponse = (userMessage: string): string => {
-    const responses = [
-      `Great question about "${userMessage.slice(0, 50)}...". Here are some ideas based on what you're looking for:\n\n1. **Project Idea 1** - A comprehensive solution that addresses real-world problems\n2. **Project Idea 2** - An innovative approach using modern technologies\n3. **Project Idea 3** - A scalable system with practical applications\n\nWhich of these directions interests you most? I can provide more specific details and requirements.`,
-      
-      `That's an interesting direction! For your capstone project, consider these aspects:\n\n**Technical Requirements:**\n- Choose technologies that align with course objectives\n- Ensure the scope is manageable within the timeframe\n- Include proper documentation and testing\n\n**Business Value:**\n- Solve a real problem you're passionate about\n- Demonstrate practical skills employers value\n- Show impact with metrics and results\n\nWould you like me to dive deeper into any of these areas?`,
-      
-      `Based on your message about "${userMessage.slice(0, 30)}...", I'd recommend focusing on:\n\n🎯 **Core Focus:** Start with a clear problem statement\n📊 **Data Strategy:** Identify your data sources and quality requirements\n🛠️ **Tech Stack:** Choose tools that match your experience level\n📈 **Success Metrics:** Define how you'll measure project success\n\nWhat specific area would you like to explore further?`
-    ];
-    
-    return responses[Math.floor(Math.random() * responses.length)];
-  };
+    fetchChatMessages();
+  }, [chatId]);
 
-  const handleSendMessage = async (content: string) => {
+  const handleSendMessage = async (query: string) => {
     const userMessage: Message = {
-      id: uuidv4(),
-      content,
+      id: messages.length,
+      content: query,
       isUser: true,
-      timestamp: new Date(),
     };
 
     setMessages(prev => [...prev, userMessage]);
-    setIsLoading(true);
 
-    // TODO: Replace with actual API call when backend is ready
-    // Example: const response = await fetch('/api/chat', { ... });
-    
-    // Simulate API delay
-    setTimeout(() => {
-      const aiResponse: Message = {
-        id: uuidv4(),
-        content: simulateAIResponse(content),
+    setIsLoading(true);
+    const response = await sendMessage(chatId, query);
+
+    if (response) {
+      const ai_message: Message = {
+        id: messages.length,
+        content: response,
         isUser: false,
-        timestamp: new Date(),
       };
-      
-      setMessages(prev => [...prev, aiResponse]);
-      setIsLoading(false);
-    }, 1000 + Math.random() * 1000);
+
+      setMessages(previousMessages => [...previousMessages, ai_message]);
+    }
+
+    setIsLoading(false);
   };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+
+  if (isPageLoading) {
+    return (
+      <div className="grid place-items-center min-h-screen rotate-90">
+        <SyncLoader color="#2563EB" />
+      </div>
+    );
+  }
 
   return (
     <Layout>
@@ -67,12 +81,12 @@ export default function Chat() {
           <h1 className="text-xl font-semibold">Capstone Project Assistant</h1>
           <p className="text-blue-100 text-sm">Get personalized project ideas and guidance for your DataTalks course</p>
         </div>
-        
+
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.map(message => (
             <ChatMessage key={message.id} message={message} />
           ))}
-          
+
           {isLoading && (
             <div className="flex gap-4 mb-6">
               <div className="flex gap-3 max-w-[80%]">
@@ -89,10 +103,10 @@ export default function Chat() {
               </div>
             </div>
           )}
-          
+
           <div ref={messagesEndRef} />
         </div>
-        
+
         <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
       </div>
     </Layout>

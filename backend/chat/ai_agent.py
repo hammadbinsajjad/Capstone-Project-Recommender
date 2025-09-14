@@ -39,7 +39,10 @@ class GeminiTestingAgent(BaseAIAgent):
         return response.text
 
     def chat_messages(self, chat_id):
-        return self.messages
+        return (
+            self.messages if self.messages
+            else [{"role": "system", "content": "No messages yet."}]
+        )
 
     def add_message(self, role, content):
         self.messages.append({"role": role, "content": content})
