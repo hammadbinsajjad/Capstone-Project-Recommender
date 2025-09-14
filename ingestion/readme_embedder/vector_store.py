@@ -3,7 +3,7 @@ import os
 from llama_index.vector_stores.pinecone import PineconeVectorStore
 from pinecone import Pinecone
 
-from config import EMBEDDING_DIMENSION, INDEX_NAME, INDEX_SPEC
+from .config import EMBEDDING_DIMENSION, INDEX_NAME, INDEX_SPEC
 
 
 def load_vector_store():
