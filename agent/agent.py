@@ -62,12 +62,23 @@ class CapstoneProjectAgent:
             except Exception as e:
                 print(f"Warning: Could not initialize OpenAI LLM: {e}")
                 print("Using mock LLM for demonstration. Please set OPENAI_API_KEY for full functionality.")
-                from llama_index.core.llms.mock import MockLLM
-                self.llm = MockLLM()
+                try:
+                    from llama_index.core.llms.mock import MockLLM
+                    self.llm = MockLLM()
+                except ImportError:
+                    # Fallback to a simple mock
+                    from unittest.mock import Mock
+                    self.llm = Mock()
+                    self.llm.complete = Mock(return_value="Mock response for testing")
+                    self.llm.chat = Mock(return_value="Mock chat response for testing")
         
-        # Set global settings
-        Settings.llm = self.llm
-        Settings.embed_model = self.embeddings
+        # Set global settings with proper validation
+        try:
+            Settings.llm = self.llm
+            Settings.embed_model = self.embeddings
+        except Exception as e:
+            print(f"Warning: Could not set global Settings: {e}")
+            # Continue without global settings
         
         # Initialize Pinecone vector store
         self.vector_store = load_vector_store()
