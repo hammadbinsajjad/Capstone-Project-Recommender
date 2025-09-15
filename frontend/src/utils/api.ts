@@ -126,6 +126,14 @@ const chatMessages = async (chatId: number) : Promise<Message[]> => {
     for (let messageIndex = 0; messageIndex < raw_messages.length; messageIndex++) {
         const message = raw_messages[messageIndex];
 
+        if (message.role !== "user" && message.role !== "assistant") {
+            continue;
+        }
+
+        if (!message.content || message.content.trim() === "") {
+            continue;
+        }
+
         messages.push({
             id: messageIndex,
             content: message.content,
