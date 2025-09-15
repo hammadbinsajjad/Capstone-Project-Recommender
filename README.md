@@ -4,6 +4,13 @@
 
 This project is an Agentic RAG-based ChatBot designed to assist students of DataTalksClub courses in generating ideas for their final capstone projects. The bot leverages previous project repositories' README files, stored in a Pinecone vector database, and uses LlamaIndex to build an intelligent agent capable of providing relevant recommendations and guidance.
 
+## App Preview
+
+Below is a preview of the Capstone Project Recommender ChatBot application:
+
+![ChatBot Conversation](assets/app-preview.png)
+
+
 ## Features
 - Agentic RAG (Retrieval-Augmented Generation) architecture
 - Integration with Pinecone vector database for semantic search
@@ -54,14 +61,15 @@ This project is an Agentic RAG-based ChatBot designed to assist students of Data
    docker-compose up --build
    ```
    - This will launch the backend, frontend, and any other required services.
-   - Access the frontend via the URL provided by Docker Compose (typically `http://localhost:3000` or similar).
+   - Access the frontend via the URL provided by Docker Compose.
 
 ### Manual Usage (for development)
 
 1. **Start the backend server:**
    ```bash
    cd backend
-   python manage.py runserver
+   python3 manage.py migrate
+   python3 manage.py runserver
    ```
 
 3. **Ingest new README files:**
