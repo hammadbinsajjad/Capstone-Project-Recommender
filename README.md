@@ -92,8 +92,8 @@ Below is a preview of the Capstone Project Recommender ChatBot application:
 ## API Documentation
 
 ### Backend API Endpoints
-- `/chat/` — Main chat endpoint for interacting with the agent
-- `/authentication/` — User authentication endpoints
+- `/api/chat/` — Main chat endpoint for interacting with the agent
+- `/auth/` — User authentication endpoints
 
 Refer to the [API.md](API.md) file for detailed API documentation.
 
