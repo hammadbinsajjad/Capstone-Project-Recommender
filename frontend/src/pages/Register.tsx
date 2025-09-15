@@ -44,7 +44,7 @@ export default function Register({ setIsAuthenticated }: RegisterProps) {
             <GraduationCap className="h-12 w-12 text-blue-600" />
           </div>
           <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            DataTalks Assistant
+            DataTalksClub Assistant
           </h1>
           <p className="text-gray-600 mt-2">Register to get capstone project ideas</p>
         </div>
