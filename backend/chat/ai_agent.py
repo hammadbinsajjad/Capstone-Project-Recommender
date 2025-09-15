@@ -1,7 +1,8 @@
+
 from google import genai
 from llama_index.storage.chat_store.postgres import PostgresChatStore
-
 from .constants import GEMINI_MODEL,  POSTGRES_CHAT_STORE_URI
+from agent.dtc_assistant import DataTalksClubAssistant
 
 
 class BaseAIAgent:
@@ -48,11 +49,14 @@ class GeminiTestingAgent(BaseAIAgent):
         self.messages.append({"role": role, "content": content})
 
 
-class AIAgent(BaseAIAgent):
-    ...
-    # Need to implement this once the AI Agent is developed
+class DataTalksClubAIAgent(BaseAIAgent):
+    def __init__(self):
+        self.assistant = DataTalksClubAssistant()
+
+    def generate_response(self, user_query, chat_id):
+        return self.assistant.run(user_query, str(chat_id))
 
     def chat_messages(self, chat_id):
         chat_store = PostgresChatStore.from_uri(POSTGRES_CHAT_STORE_URI)
         return [{"role": message.role, "content": message.content}
-                for message in chat_store.get_messages(chat_id)]
+                for message in chat_store.get_messages(str(chat_id))]

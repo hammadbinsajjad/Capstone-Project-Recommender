@@ -1,8 +1,9 @@
+from asgiref.sync import async_to_sync
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from .ai_agent import GeminiTestingAgent
+from .ai_agent import DataTalksClubAIAgent
 from .constants import QUERY_PREVIEW_LENGTH
 from .models import Chat
 from .serializers import ChatSerializer
@@ -12,14 +13,14 @@ from .utils import chat_title
 class ChatsViewSet(ModelViewSet):
     serializer_class = ChatSerializer
     permission_classes = [IsAuthenticated]
-    ai_agent = GeminiTestingAgent()
+    ai_agent = DataTalksClubAIAgent()
 
     def get_queryset(self):
         return Chat.objects.filter(user=self.request.user)
 
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
-        ai_answer = self.ai_agent.generate_response(
+        ai_answer = async_to_sync(self.ai_agent.generate_response)(
             user_query=request.data.get("user_query", ""),
             chat_id=response.data["id"]
         )
@@ -52,7 +53,7 @@ class ChatsViewSet(ModelViewSet):
             return Response({"detail": "Not found."}, status=404)
 
         response = super().update(request, *args, **kwargs)
-        ai_answer = self.ai_agent.generate_response(
+        ai_answer = async_to_sync(self.ai_agent.generate_response)(
             user_query=request.data.get("user_query", ""),
             chat_id=chat.id,
         )
