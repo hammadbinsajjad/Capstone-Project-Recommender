@@ -24,10 +24,12 @@ USER_AGENT = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:141.0) Gecko/20100101 F
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
+IS_GOOGLE_COLAB = os.environ.get("IS_GOOGLE_COLAB") == "true"
+
 # Concurrency and throttling settings
-CONCURRENT_REQUESTS = 1
-CONCURRENT_REQUESTS_PER_DOMAIN = 1
-DOWNLOAD_DELAY = 10
+CONCURRENT_REQUESTS = 10 if IS_GOOGLE_COLAB else 4
+CONCURRENT_REQUESTS_PER_DOMAIN = 10 if IS_GOOGLE_COLAB else 4
+DOWNLOAD_DELAY = 2.5 if IS_GOOGLE_COLAB else 4
 
 # Disable cookies (enabled by default)
 # COOKIES_ENABLED = False

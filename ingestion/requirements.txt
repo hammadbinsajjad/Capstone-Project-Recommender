@@ -4,4 +4,4 @@ llama-index-core
 llama-index-embeddings-huggingface
 llama-index-vector-stores-pinecone
 sentence-transformers
-pinecone-client
+pinecone

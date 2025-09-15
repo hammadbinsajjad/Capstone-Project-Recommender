@@ -3,8 +3,11 @@ import os
 from pinecone import ServerlessSpec
 
 
+IS_GOOGLE_COLAB = os.environ.get("IS_GOOGLE_COLAB") == "true"
+
+
 # Hugging Face Embeddings Model
-EMBEDDINGS_MODEL_NAME = "thenlper/gte-large"
+EMBEDDINGS_MODEL_NAME = "mixedbread-ai/mxbai-embed-large-v1"
 
 # Readme Files Directory (made by readme_downloader)
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

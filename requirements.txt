@@ -10,4 +10,7 @@ llama-index
 llama-index-core
 llama-index-vector-stores-pinecone
 llama-index-embeddings-huggingface
+llama-index-embeddings-openvino
 pinecone
+sentence-transformers
+Scrapy

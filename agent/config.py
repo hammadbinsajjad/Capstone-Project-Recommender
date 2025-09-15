@@ -3,7 +3,7 @@ import os
 from pinecone import ServerlessSpec
 
 # Hugging Face Embeddings Model
-EMBEDDINGS_MODEL_NAME = "thenlper/gte-large"
+EMBEDDINGS_MODEL_NAME = "mixedbread-ai/mxbai-embed-large-v1"
 
 
 # LLM Configuration
