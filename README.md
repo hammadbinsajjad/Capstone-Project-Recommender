@@ -1,4 +1,4 @@
-# Capstone Project Recommender ChatBot
+# DataTalksClub Assistant - Capstone Project Recommender ChatBot
 
 ## Project Overview
 
@@ -6,7 +6,7 @@ This project is an Agentic RAG-based ChatBot designed to assist students of Data
 
 ## App Preview
 
-Below is a preview of the Capstone Project Recommender ChatBot application:
+Below is a preview of the application:
 
 ![ChatBot Conversation](assets/app-preview.png)
 

@@ -1,6 +1,6 @@
 # Contributing Guidelines
 
-Thank you for your interest in contributing to the Capstone Project Recommender ChatBot! We welcome contributions from the community to improve the project.
+Thank you for your interest in contributing to the DataTalksClub Assistant - Capstone Project Recommender ChatBot! We welcome contributions from the community to improve the project.
 
 ## How to Contribute
 
