@@ -1,5 +1,5 @@
 # VSCode Files
 .vscode/
-.env/
+.env
 .idea/
 .DS_Store
